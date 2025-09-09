@@ -9,10 +9,17 @@ import {
   Divider,
   Box,
 } from "@mui/material";
-import { Dashboard, ListAlt, AddBox,Person ,MedicalInformation,CalendarMonth ,Assessment} from "@mui/icons-material";
+import {
+  Dashboard,
+  ListAlt,
+  AddBox,
+  Person,
+  MedicalInformation,
+  CalendarMonth,
+  Assessment,
+} from "@mui/icons-material";
 import { Link, useLocation } from "react-router-dom";
 import qtlogo from "../images/qtlogo.jpg";
-
 
 const drawerWidth = 220;
 
@@ -20,27 +27,13 @@ const Sidebar = ({ open }) => {
   const location = useLocation();
 
   const items = [
-    {
-      text: "Dashboard",
-      icon: <Dashboard sx={{ color: "#64b5f6" }} />, // light blue
-      to: "/",
-    },
-    {
-      text: "Token List",
-      icon: <ListAlt sx={{ color: "#81c784" }} />, // green
-      to: "/tokens",
-    },
-    {
-      text: "Generate Token",
-      icon: <AddBox sx={{ color: "#ba68c8" }} />, // purple
-      to: "/generate",
-    },
-    { text: "Doctors", icon: <Person sx={{ color: "white" }}/>, to: "/doctors" },
-    { text: "Appointments", icon: <MedicalInformation sx={{ color: "orange" }} />, to: "/appointments" },
-  { text: "Doctor Calendar", icon: <CalendarMonth sx={{ color: "blue" }} />, to: "/doctor-calendar" },
-  { text: "Reports", icon: <Assessment sx={{ color: "teal" }} />, to: "/reports" }
-
-
+    { text: "Dashboard", icon: <Dashboard sx={{ color: "#fff" }} />, to: "/" },
+    { text: "Token List", icon: <ListAlt sx={{ color: "#fff" }} />, to: "/tokens" },
+    { text: "Generate Token", icon: <AddBox sx={{ color: "#fff" }} />, to: "/generate" },
+    { text: "Doctors", icon: <Person sx={{ color: "#fff" }} />, to: "/doctors" },
+    { text: "Appointments", icon: <MedicalInformation sx={{ color: "#fff" }} />, to: "/appointments" },
+    { text: "Doctor Calendar", icon: <CalendarMonth sx={{ color: "#fff" }} />, to: "/doctor-calendar" },
+    { text: "Reports", icon: <Assessment sx={{ color: "#fff" }} />, to: "/reports" },
   ];
 
   return (
@@ -53,26 +46,24 @@ const Sidebar = ({ open }) => {
           width: open ? drawerWidth : 64,
           transition: "width 0.3s ease",
           boxSizing: "border-box",
-          backgroundColor: "#343456", // dark violet
+          backgroundColor: "#00796b", // light green background
           color: "#fff",
           borderRight: "none",
-          boxShadow: "2px 0 6px rgba(0, 0, 0, 0.2)",
+          boxShadow: "2px 0 12px rgba(0,0,0,0.1)",
         },
       }}
     >
       <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
         {/* Top Logo */}
-        <Box
-          sx={{
-            height: 64,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: open ? "center" : "center",
-            px: 2,
-            py: 1,
-            backgroundColor: "#2e2e50",
-          }}
-        >
+        <Box sx={{
+          height: 64,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          px: 2,
+          py: 1,
+          backgroundColor: "#00796b", // same theme as Topbar
+        }}>
           <img
             src={qtlogo}
             alt="QToken Logo"
@@ -80,21 +71,16 @@ const Sidebar = ({ open }) => {
               height: 32,
               width: open ? 32 : 30,
               marginRight: open ? 10 : 0,
-              transition: "0.3s ease",
+              transition: "0.3s ease"
             }}
           />
-         
         </Box>
 
         <List>
           {items.map((item) => {
             const isActive = location.pathname === item.to;
             return (
-              <Tooltip
-                title={!open ? item.text : ""}
-                placement="right"
-                key={item.text}
-              >
+              <Tooltip title={!open ? item.text : ""} placement="right" key={item.text}>
                 <ListItem
                   button
                   component={Link}
@@ -105,25 +91,16 @@ const Sidebar = ({ open }) => {
                     mx: open ? 1 : 0.5,
                     my: 0.5,
                     px: open ? 2 : 1,
-                    "&.Mui-selected": {
-                      backgroundColor: "#505079",
-                    },
-                    "&:hover": {
-                      backgroundColor: "#41416b",
-                    },
+                    "&.Mui-selected": { backgroundColor: "#004d40" }, // dark highlight
+                    "&:hover": { backgroundColor: "#66bb6a" },       // hover lighter
+                    transition: "background-color 0.3s ease",
                   }}
                 >
-                  <ListItemIcon sx={{ minWidth: 40 }}>
-                    {item.icon}
-                  </ListItemIcon>
+                  <ListItemIcon sx={{ minWidth: 40, color: "#fff" }}>{item.icon}</ListItemIcon>
                   {open && (
                     <ListItemText
                       primary={item.text}
-                      primaryTypographyProps={{
-                        fontSize: 14,
-                        fontWeight: 500,
-                        color: "#fff",
-                      }}
+                      primaryTypographyProps={{ fontSize: 14, fontWeight: 500, color: "#fff" }}
                     />
                   )}
                 </ListItem>
@@ -131,8 +108,7 @@ const Sidebar = ({ open }) => {
             );
           })}
         </List>
-
-        <Divider sx={{ backgroundColor: "#555", mt: "auto" }} />
+        <Divider sx={{ backgroundColor: "#004d40", mt: "auto" }} />
       </Box>
     </Drawer>
   );

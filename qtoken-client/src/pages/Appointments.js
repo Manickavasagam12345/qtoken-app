@@ -18,11 +18,15 @@ import {
   Chip,
   IconButton,
   Stack,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from "@mui/material";
 
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import DoneIcon from '@mui/icons-material/Done';
-import CancelIcon from '@mui/icons-material/Cancel';
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import DoneIcon from "@mui/icons-material/Done";
+import CancelIcon from "@mui/icons-material/Cancel";
 
 import axios from "axios";
 
@@ -37,6 +41,14 @@ const Appointments = () => {
     reason: "",
   });
   const [loadingUpdateId, setLoadingUpdateId] = useState(null);
+
+  // Reschedule dialog state
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedAppt, setSelectedAppt] = useState(null);
+  const [rescheduleData, setRescheduleData] = useState({
+    date: "",
+    time: "",
+  });
 
   const fetchAppointments = async () => {
     try {
@@ -86,12 +98,35 @@ const Appointments = () => {
   const handleStatusUpdate = async (id, status) => {
     try {
       setLoadingUpdateId(id);
-      await axios.patch(`http://localhost:5000/api/appointments/${id}/status`, { status });
+      await axios.patch(
+        `http://localhost:5000/api/appointments/${id}/status`,
+        { status }
+      );
       fetchAppointments();
     } catch (err) {
       alert("Error updating status");
     } finally {
       setLoadingUpdateId(null);
+    }
+  };
+
+  // Reschedule handlers
+  const handleOpenDialog = (appt) => {
+    setSelectedAppt(appt);
+    setRescheduleData({ date: appt.date, time: appt.time });
+    setOpenDialog(true);
+  };
+
+  const handleRescheduleSave = async () => {
+    try {
+      await axios.patch(
+        `http://localhost:5000/api/appointments/${selectedAppt._id}/reschedule`,
+        rescheduleData
+      );
+      fetchAppointments();
+      setOpenDialog(false);
+    } catch (err) {
+      alert("Error rescheduling appointment");
     }
   };
 
@@ -135,6 +170,7 @@ const Appointments = () => {
         Doctor Appointments
       </Typography>
 
+      {/* Appointment Form */}
       <Box
         component="form"
         onSubmit={handleSubmit}
@@ -192,6 +228,7 @@ const Appointments = () => {
         </Button>
       </Box>
 
+      {/* Appointments Table */}
       <TableContainer component={Paper}>
         <Table>
           <TableHead sx={{ backgroundColor: "#f0f0f0" }}>
@@ -222,7 +259,9 @@ const Appointments = () => {
                         size="small"
                         color="success"
                         disabled={loadingUpdateId === appt._id}
-                        onClick={() => handleStatusUpdate(appt._id, "completed")}
+                        onClick={() =>
+                          handleStatusUpdate(appt._id, "completed")
+                        }
                       >
                         Complete
                       </Button>
@@ -249,6 +288,13 @@ const Appointments = () => {
                         Pending
                       </Button>
                     )}
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      onClick={() => handleOpenDialog(appt)}
+                    >
+                      Reschedule
+                    </Button>
                   </Stack>
                 </TableCell>
               </TableRow>
@@ -256,6 +302,35 @@ const Appointments = () => {
           </TableBody>
         </Table>
       </TableContainer>
+
+      {/* Reschedule Dialog */}
+      <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+        <DialogTitle>Reschedule Appointment</DialogTitle>
+        <DialogContent sx={{ display: "flex", gap: 2, mt: 1 }}>
+          <TextField
+            type="date"
+            name="date"
+            value={rescheduleData.date}
+            onChange={(e) =>
+              setRescheduleData({ ...rescheduleData, date: e.target.value })
+            }
+          />
+          <TextField
+            type="time"
+            name="time"
+            value={rescheduleData.time}
+            onChange={(e) =>
+              setRescheduleData({ ...rescheduleData, time: e.target.value })
+            }
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenDialog(false)}>Cancel</Button>
+          <Button onClick={handleRescheduleSave} variant="contained">
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };
