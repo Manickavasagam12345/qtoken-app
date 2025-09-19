@@ -44,9 +44,7 @@ exports.getDoctorWiseCount = async (req, res) => {
           as: "doctor",
         },
       },
-      {
-        $unwind: "$doctor",
-      },
+      { $unwind: "$doctor" },
       {
         $project: {
           doctor: "$doctor.name",
@@ -61,7 +59,6 @@ exports.getDoctorWiseCount = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
-
 
 exports.updateAppointmentStatus = async (req, res) => {
   try {
@@ -85,6 +82,21 @@ exports.updateAppointmentStatus = async (req, res) => {
     console.error("Update Status Error:", err);
     res.status(500).json({ message: "Server error" });
   }
+};
+
+exports.updateAppointmentReschedule = async (req, res) => {
+  const { id } = req.params;
+  const { date, time } = req.body;
+
+  const updated = await Appointment.findByIdAndUpdate(
+    id,
+    { date, time },
+    { new: true }
+  ).populate("doctor", "name specialization");
+
+  if (!updated) return res.status(404).json({ message: "Appointment not found" });
+
+  res.json({ message: "Appointment rescheduled", data: updated });
 };
 
 
