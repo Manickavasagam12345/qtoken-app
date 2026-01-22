@@ -8,8 +8,8 @@ import {
   YAxis,
   Tooltip,
   CartesianGrid,
-  Legend,
 } from "recharts";
+import { BarChart as BarChartIcon } from "@mui/icons-material";
 import { getTokenList } from "../services/api";
 
 const ChartPanel = () => {
@@ -20,7 +20,6 @@ const ChartPanel = () => {
     const fetch = async () => {
       const res = await getTokenList();
       const allData = res.data.data || [];
-
       const today = new Date();
       today.setHours(0, 0, 0, 0);
 
@@ -32,7 +31,7 @@ const ChartPanel = () => {
       const hourMap = {};
       todayTokens.forEach((token) => {
         const hour = new Date(token.createdAt).getHours();
-        const label = `${hour}:00 - ${hour + 1}:00`;
+        const label = `${hour}:00`;
         hourMap[label] = (hourMap[label] || 0) + 1;
       });
 
@@ -40,7 +39,6 @@ const ChartPanel = () => {
         hour,
         count,
       }));
-
       setChartData(chart);
     };
     fetch();
@@ -48,47 +46,74 @@ const ChartPanel = () => {
 
   return (
     <Paper
-      elevation={3}
+      elevation={0}
       sx={{
         p: 3,
         borderRadius: 3,
-        mt: 3,
-        height: 360,
-        backgroundColor: theme.palette.background.paper,
-        color: theme.palette.text.primary,
+        background:
+          theme.palette.mode === "dark"
+            ? "rgba(255, 255, 255, 0.05)"
+            : "#fff",
+        border: `1px solid ${
+          theme.palette.mode === "dark"
+            ? "rgba(255, 255, 255, 0.1)"
+            : "#e5e7eb"
+        }`,
       }}
     >
-      <Typography variant="h6" fontWeight={600} gutterBottom>
-        📊 Tokens Issued Per Hour (Today)
-      </Typography>
+      <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
+        <Box
+          sx={{
+            width: 40,
+            height: 40,
+            borderRadius: 2,
+            bgcolor: "rgba(102, 126, 234, 0.1)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "#667eea",
+            mr: 2,
+          }}
+        >
+          <BarChartIcon />
+        </Box>
+        <Typography variant="h6" sx={{ fontWeight: 600 }}>
+          Tokens Issued Per Hour (Today)
+        </Typography>
+      </Box>
 
       {chartData.length === 0 ? (
-        <Box textAlign="center" py={5}>
-          <Typography variant="body1" color="text.secondary">
-            No tokens generated today.
-          </Typography>
+        <Box
+          sx={{
+            textAlign: "center",
+            py: 6,
+            color: theme.palette.text.secondary,
+          }}
+        >
+          <Typography>No tokens generated today.</Typography>
         </Box>
       ) : (
-        <ResponsiveContainer width="100%" height="80%">
+        <ResponsiveContainer width="100%" height={300}>
           <BarChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" stroke={theme.palette.divider} />
-            <XAxis dataKey="hour" stroke={theme.palette.text.primary} />
-            <YAxis stroke={theme.palette.text.primary} />
+            <XAxis
+              dataKey="hour"
+              stroke={theme.palette.text.secondary}
+              style={{ fontSize: 12 }}
+            />
+            <YAxis
+              stroke={theme.palette.text.secondary}
+              style={{ fontSize: 12 }}
+            />
             <Tooltip
               contentStyle={{
-                backgroundColor: theme.palette.background.paper,
+                backgroundColor:
+                  theme.palette.mode === "dark" ? "#1a1a2e" : "#fff",
                 border: `1px solid ${theme.palette.divider}`,
-                color: theme.palette.text.primary,
+                borderRadius: 8,
               }}
             />
-            <Legend />
-            <Bar
-              dataKey="count"
-              name="Tokens"
-              fill={theme.palette.primary.main}
-              radius={[6, 6, 0, 0]}
-              barSize={40}
-            />
+            <Bar dataKey="count" fill="#667eea" radius={[8, 8, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       )}

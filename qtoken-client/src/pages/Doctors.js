@@ -12,9 +12,23 @@ import {
   TableBody,
   TableRow,
   TableCell,
+  useTheme,
+  Card,
+  InputAdornment,
+  TableContainer,
+  Chip,
 } from "@mui/material";
+import {
+  MedicalServices,
+  Person,
+  Business,
+  Phone,
+  Email,
+  LocalHospital,
+} from "@mui/icons-material";
 
 const Doctors = () => {
+  const theme = useTheme();
   const [form, setForm] = useState({
     name: "",
     department: "",
@@ -22,7 +36,6 @@ const Doctors = () => {
     email: "",
     specialization: "",
   });
-
   const [doctors, setDoctors] = useState([]);
 
   useEffect(() => {
@@ -59,62 +72,213 @@ const Doctors = () => {
     }
   };
 
-  return (
-    <Box p={3}>
-      <Typography variant="h5" gutterBottom>
-        Doctor Registration
-      </Typography>
+  const fieldConfig = [
+    { name: "name", label: "Doctor Name", icon: <Person /> },
+    { name: "department", label: "Department", icon: <Business /> },
+    { name: "phone", label: "Phone Number", icon: <Phone /> },
+    { name: "email", label: "Email Address", icon: <Email />, type: "email" },
+    { name: "specialization", label: "Specialization", icon: <MedicalServices /> },
+  ];
 
-      <Paper sx={{ p: 2, mb: 4 }}>
+  return (
+    <Box sx={{ p: 3 }}>
+      {/* Header */}
+      <Box sx={{ mb: 4 }}>
+        <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+          <Box
+            sx={{
+              width: 48,
+              height: 48,
+              borderRadius: 2,
+              background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              mr: 2,
+            }}
+          >
+            <LocalHospital sx={{ color: "#fff", fontSize: 28 }} />
+          </Box>
+          <Typography
+            variant="h4"
+            sx={{
+              fontWeight: 700,
+              color: theme.palette.text.primary,
+            }}
+          >
+            Doctor Management
+          </Typography>
+        </Box>
+        <Typography variant="body2" sx={{ color: theme.palette.text.secondary, ml: 8 }}>
+          Register and manage hospital doctors
+        </Typography>
+      </Box>
+
+      {/* Registration Form */}
+      <Card
+        elevation={0}
+        sx={{
+          p: 3,
+          mb: 4,
+          borderRadius: 3,
+          background:
+            theme.palette.mode === "dark"
+              ? "rgba(255, 255, 255, 0.05)"
+              : "#fff",
+          border: `1px solid ${
+            theme.palette.mode === "dark"
+              ? "rgba(255, 255, 255, 0.1)"
+              : "#e5e7eb"
+          }`,
+        }}
+      >
+        <Typography
+          variant="h6"
+          sx={{
+            mb: 3,
+            fontWeight: 600,
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <MedicalServices sx={{ mr: 1, color: "#667eea" }} />
+          Register New Doctor
+        </Typography>
         <form onSubmit={handleSubmit}>
           <Grid container spacing={2}>
-            {["name", "department", "phone", "email", "specialization"].map((field) => (
-              <Grid item xs={12} sm={6} md={4} key={field}>
+            {fieldConfig.map((field) => (
+              <Grid item xs={12} md={6} key={field.name}>
                 <TextField
-                  label={field[0].toUpperCase() + field.slice(1)}
-                  name={field}
-                  value={form[field]}
-                  onChange={handleChange}
                   fullWidth
-                  required={field !== "specialization" ? true : false}
+                  label={field.label}
+                  name={field.name}
+                  type={field.type || "text"}
+                  value={form[field.name]}
+                  onChange={handleChange}
+                  required
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        {React.cloneElement(field.icon, { sx: { color: "#667eea" } })}
+                      </InputAdornment>
+                    ),
+                  }}
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      borderRadius: 2,
+                      "&:hover fieldset": {
+                        borderColor: "#667eea",
+                      },
+                      "&.Mui-focused fieldset": {
+                        borderColor: "#667eea",
+                      },
+                    },
+                  }}
                 />
               </Grid>
             ))}
             <Grid item xs={12}>
-              <Button type="submit" variant="contained" color="primary">
+              <Button
+                type="submit"
+                variant="contained"
+                size="large"
+                sx={{
+                  borderRadius: 2,
+                  px: 4,
+                  py: 1.2,
+                  textTransform: "none",
+                  fontWeight: 600,
+                  background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                  boxShadow: "0 4px 14px rgba(102, 126, 234, 0.4)",
+                  "&:hover": {
+                    background: "linear-gradient(135deg, #5568d3 0%, #6a3f8f 100%)",
+                    boxShadow: "0 6px 20px rgba(102, 126, 234, 0.5)",
+                  },
+                }}
+              >
                 Add Doctor
               </Button>
             </Grid>
           </Grid>
         </form>
-      </Paper>
+      </Card>
 
-      <Typography variant="h6" gutterBottom>
-        Doctors List
-      </Typography>
-
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Name</TableCell>
-            <TableCell>Department</TableCell>
-            <TableCell>Phone</TableCell>
-            <TableCell>Email</TableCell>
-            <TableCell>Specialization</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {doctors.map((doc) => (
-            <TableRow key={doc._id}>
-              <TableCell>{doc.name}</TableCell>
-              <TableCell>{doc.department}</TableCell>
-              <TableCell>{doc.phone}</TableCell>
-              <TableCell>{doc.email}</TableCell>
-              <TableCell>{doc.specialization}</TableCell>
+      {/* Doctors List */}
+      <TableContainer
+        component={Paper}
+        elevation={0}
+        sx={{
+          borderRadius: 3,
+          background:
+            theme.palette.mode === "dark"
+              ? "rgba(255, 255, 255, 0.05)"
+              : "#fff",
+          border: `1px solid ${
+            theme.palette.mode === "dark"
+              ? "rgba(255, 255, 255, 0.1)"
+              : "#e5e7eb"
+          }`,
+          overflow: "hidden",
+        }}
+      >
+        <Table>
+          <TableHead>
+            <TableRow
+              sx={{
+                background:
+                  theme.palette.mode === "dark"
+                    ? "rgba(102, 126, 234, 0.1)"
+                    : "rgba(102, 126, 234, 0.05)",
+              }}
+            >
+              <TableCell sx={{ fontWeight: 700, color: "#667eea" }}>Name</TableCell>
+              <TableCell sx={{ fontWeight: 700, color: "#667eea" }}>Department</TableCell>
+              <TableCell sx={{ fontWeight: 700, color: "#667eea" }}>Phone</TableCell>
+              <TableCell sx={{ fontWeight: 700, color: "#667eea" }}>Email</TableCell>
+              <TableCell sx={{ fontWeight: 700, color: "#667eea" }}>Specialization</TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHead>
+          <TableBody>
+            {doctors.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={5} align="center" sx={{ py: 6 }}>
+                  <Typography color="textSecondary">No doctors registered</Typography>
+                </TableCell>
+              </TableRow>
+            ) : (
+              doctors.map((doc) => (
+                <TableRow
+                  key={doc._id}
+                  sx={{
+                    "&:hover": {
+                      bgcolor:
+                        theme.palette.mode === "dark"
+                          ? "rgba(255,255,255,0.02)"
+                          : "rgba(102, 126, 234, 0.02)",
+                    },
+                  }}
+                >
+                  <TableCell sx={{ fontWeight: 600 }}>Dr. {doc.name}</TableCell>
+                  <TableCell>{doc.department}</TableCell>
+                  <TableCell>{doc.phone}</TableCell>
+                  <TableCell>{doc.email}</TableCell>
+                  <TableCell>
+                    <Chip
+                      label={doc.specialization}
+                      size="small"
+                      sx={{
+                        background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                        color: "#fff",
+                        fontWeight: 600,
+                      }}
+                    />
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </Box>
   );
 };
