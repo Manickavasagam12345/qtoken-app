@@ -1,8 +1,12 @@
 import React, { useState } from "react";
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { Box, Paper, Typography, TextField, Button } from "@mui/material";
 import { LocalHospital } from "@mui/icons-material";
 import qtlogo from "../images/qtlogo.jpg";
+=======
+import { TextField, Button, Box, Typography } from "@mui/material";
+>>>>>>> parent of f7a6c9d (Merge pull request #1 from Manickavasagam12345/manick-local)
 =======
 import { TextField, Button, Box, Typography } from "@mui/material";
 >>>>>>> parent of f7a6c9d (Merge pull request #1 from Manickavasagam12345/manick-local)
@@ -20,6 +24,7 @@ const LoginForm = ({ onSubmit }) => {
   };
 
   return (
+<<<<<<< HEAD
 <<<<<<< HEAD
     <Box
       sx={{
@@ -164,6 +169,8 @@ const LoginForm = ({ onSubmit }) => {
         </Typography>
       </Paper>
 =======
+=======
+>>>>>>> parent of f7a6c9d (Merge pull request #1 from Manickavasagam12345/manick-local)
     <Box sx={{ width: 350, p: 4, bgcolor: "#fff", borderRadius: 2, boxShadow: 3 }}>
       <Typography variant="h5" mb={2} textAlign="center">
         QToken Admin Login
@@ -175,6 +182,9 @@ const LoginForm = ({ onSubmit }) => {
           Login
         </Button>
       </form>
+<<<<<<< HEAD
+>>>>>>> parent of f7a6c9d (Merge pull request #1 from Manickavasagam12345/manick-local)
+=======
 >>>>>>> parent of f7a6c9d (Merge pull request #1 from Manickavasagam12345/manick-local)
     </Box>
   );

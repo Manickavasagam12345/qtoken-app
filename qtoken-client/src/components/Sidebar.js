@@ -11,6 +11,7 @@ import {
   Toolbar,
 } from "@mui/material";
 <<<<<<< HEAD
+<<<<<<< HEAD
 import {
   Dashboard,
   ListAlt,
@@ -24,11 +25,15 @@ import {
 =======
 import { Dashboard, ListAlt, AddBox,Person ,MedicalInformation,CalendarMonth ,Assessment} from "@mui/icons-material";
 >>>>>>> parent of f7a6c9d (Merge pull request #1 from Manickavasagam12345/manick-local)
+=======
+import { Dashboard, ListAlt, AddBox,Person ,MedicalInformation,CalendarMonth ,Assessment} from "@mui/icons-material";
+>>>>>>> parent of f7a6c9d (Merge pull request #1 from Manickavasagam12345/manick-local)
 import { Link, useLocation } from "react-router-dom";
 
 <<<<<<< HEAD
 const Sidebar = ({ open, drawerWidth = 260 }) => {
 =======
+
 
 const drawerWidth = 220;
 
@@ -39,6 +44,7 @@ const Sidebar = ({ open }) => {
 
   const items = [
 <<<<<<< HEAD
+<<<<<<< HEAD
     { text: "Dashboard", icon: <Dashboard />, to: "/" },
     { text: "Token List", icon: <ListAlt />, to: "/tokens" },
     { text: "Generate Token", icon: <AddBox />, to: "/generate" },
@@ -47,6 +53,8 @@ const Sidebar = ({ open }) => {
     { text: "Doctor Calendar", icon: <CalendarMonth />, to: "/doctor-calendar" },
     { text: "Reports", icon: <Assessment />, to: "/reports" },
 =======
+=======
+>>>>>>> parent of f7a6c9d (Merge pull request #1 from Manickavasagam12345/manick-local)
     {
       text: "Dashboard",
       icon: <Dashboard sx={{ color: "#64b5f6" }} />, // light blue
@@ -68,6 +76,9 @@ const Sidebar = ({ open }) => {
   { text: "Reports", icon: <Assessment sx={{ color: "teal" }} />, to: "/reports" }
 
 
+<<<<<<< HEAD
+>>>>>>> parent of f7a6c9d (Merge pull request #1 from Manickavasagam12345/manick-local)
+=======
 >>>>>>> parent of f7a6c9d (Merge pull request #1 from Manickavasagam12345/manick-local)
   ];
 
@@ -80,6 +91,7 @@ const Sidebar = ({ open }) => {
         "& .MuiDrawer-paper": {
           width: currentDrawerWidth,
           boxSizing: "border-box",
+<<<<<<< HEAD
 <<<<<<< HEAD
           transition: "width 225ms cubic-bezier(0, 0, 0.2, 1) 0ms",
           overflowX: "hidden",
@@ -188,6 +200,8 @@ const Sidebar = ({ open }) => {
         })}
       </List>
 =======
+=======
+>>>>>>> parent of f7a6c9d (Merge pull request #1 from Manickavasagam12345/manick-local)
           backgroundColor: "#343456", // dark violet
           color: "#fff",
           borderRight: "none",

@@ -19,6 +19,7 @@ import {
   IconButton,
   Stack,
 <<<<<<< HEAD
+<<<<<<< HEAD
   Dialog,
   DialogTitle,
   DialogContent,
@@ -41,6 +42,8 @@ import {
   Search,
 } from "@mui/icons-material";
 =======
+=======
+>>>>>>> parent of f7a6c9d (Merge pull request #1 from Manickavasagam12345/manick-local)
 } from "@mui/material";
 
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
@@ -62,7 +65,10 @@ const Appointments = () => {
     reason: "",
   });
   const [loadingUpdateId, setLoadingUpdateId] = useState(null);
+<<<<<<< HEAD
   const [searchTerm, setSearchTerm] = useState("");
+=======
+>>>>>>> parent of f7a6c9d (Merge pull request #1 from Manickavasagam12345/manick-local)
 
   const fetchAppointments = async () => {
     try {
@@ -231,6 +237,7 @@ const Appointments = () => {
         </Typography>
       </Box>
 
+<<<<<<< HEAD
       {/* Appointment Booking Form */}
       <Card
         elevation={0}
@@ -489,6 +496,8 @@ const Appointments = () => {
         }}
       >
 =======
+=======
+>>>>>>> parent of f7a6c9d (Merge pull request #1 from Manickavasagam12345/manick-local)
       <TableContainer component={Paper}>
 >>>>>>> parent of f7a6c9d (Merge pull request #1 from Manickavasagam12345/manick-local)
         <Table>
@@ -676,6 +685,7 @@ const Appointments = () => {
         </Table>
       </TableContainer>
 <<<<<<< HEAD
+<<<<<<< HEAD
 
       {/* Reschedule Dialog */}
       <Dialog
@@ -793,6 +803,8 @@ const Appointments = () => {
           </Button>
         </DialogActions>
       </Dialog>
+=======
+>>>>>>> parent of f7a6c9d (Merge pull request #1 from Manickavasagam12345/manick-local)
 =======
 >>>>>>> parent of f7a6c9d (Merge pull request #1 from Manickavasagam12345/manick-local)
     </Box>

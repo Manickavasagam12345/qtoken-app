@@ -24,6 +24,7 @@ const Topbar = ({ toggleSidebar }) => {
 
   return (
 <<<<<<< HEAD
+<<<<<<< HEAD
     <AppBar
       position="fixed"
       sx={{
@@ -111,6 +112,8 @@ const Topbar = ({ toggleSidebar }) => {
           Logout
         </Button>
 =======
+=======
+>>>>>>> parent of f7a6c9d (Merge pull request #1 from Manickavasagam12345/manick-local)
     <AppBar position="static" sx={{ bgcolor: "#343456" }}>
       <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
         <Box sx={{ display: "flex", alignItems: "center" }}>
