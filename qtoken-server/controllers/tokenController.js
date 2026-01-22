@@ -1,4 +1,7 @@
+
+// Helper
 const UserToken = require("../models/UserToken");
+const Patient = require("../models/Patient");
 
 // Helper
 const getTodayDate = () => {
@@ -7,19 +10,38 @@ const getTodayDate = () => {
   return today;
 };
 
-// ✅ Create Token
+const getDayPrefix = () => {
+  const days = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+  return days[new Date().getDay()];
+};
+
 const createToken = async (req, res) => {
   try {
-    const { name, reason, doctor } = req.body;
+    const { patientId, reason, doctor } = req.body;
     const today = getTodayDate();
+    const prefix = getDayPrefix();
 
     const todayTokenCount = await UserToken.countDocuments({
       createdAt: { $gte: today },
+      token_number: { $regex: `^${prefix}-` },
     });
 
-    const token_number = "T" + String(todayTokenCount + 1).padStart(3, "0");
+    const token_number =
+      prefix + "-" + String(todayTokenCount + 1).padStart(3, "0");
 
-    const newToken = new UserToken({ name, reason, doctor, token_number });
+    const patient = await Patient.findById(patientId);
+    if (!patient) {
+      return res.status(404).json({ message: "Patient not found" });
+    }
+
+    const newToken = new UserToken({
+      patient: patient._id,
+      name: patient.name,
+      reason,
+      doctor,
+      token_number,
+    });
+
     await newToken.save();
 
     res.status(201).json({ message: "Token created", data: newToken });
@@ -29,7 +51,7 @@ const createToken = async (req, res) => {
   }
 };
 
-// ✅ List Tokens (Today)
+
 const getTokens = async (req, res) => {
   try {
     const { page = 1, limit = 10, search = "" } = req.query;
@@ -52,7 +74,6 @@ const getTokens = async (req, res) => {
   }
 };
 
-// ✅ Update Token Status
 const updateTokenStatus = async (req, res) => {
   try {
     const { id } = req.params;
@@ -74,7 +95,6 @@ const updateTokenStatus = async (req, res) => {
   }
 };
 
-// ✅ Report Filter by Date
 const getReportTokens = async (req, res) => {
   try {
     const { startDate, endDate } = req.query;
@@ -90,9 +110,7 @@ const getReportTokens = async (req, res) => {
       },
     };
 
-    const tokens = await UserToken.find(query)
-      .populate("doctor", "name") // only if doctor is ObjectId
-      .sort({ createdAt: -1 });
+    const tokens = await UserToken.find(query).sort({ createdAt: -1 });
 
     res.status(200).json({ data: tokens });
   } catch (error) {
@@ -101,7 +119,6 @@ const getReportTokens = async (req, res) => {
   }
 };
 
-// ✅ Distinct patient names (dropdown)
 const getDistinctNames = async (req, res) => {
   try {
     const names = await UserToken.distinct("name");
@@ -112,7 +129,6 @@ const getDistinctNames = async (req, res) => {
   }
 };
 
-// ✅ Distinct reasons (dropdown)
 const getDistinctReasons = async (req, res) => {
   try {
     const reasons = await UserToken.distinct("reason");
@@ -130,7 +146,7 @@ const getDistinctReasons = async (req, res) => {
 //     const yesterday = new Date(today);
 //     yesterday.setDate(yesterday.getDate() - 1);
 
-//     const tokens = await UserToken.find({
+//     const tokens = await UserToken.find({s
 //       status: "missed",
 //       createdAt: { $gte: yesterday, $lt: today },
 //     });
@@ -142,7 +158,6 @@ const getDistinctReasons = async (req, res) => {
 //   }
 // };
 
-// ✅ Export
 module.exports = {
   createToken,
   getTokens,
