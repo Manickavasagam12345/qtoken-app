@@ -1,5 +1,9 @@
 import React, { useState } from "react";
-import { createToken } from "../services/api";
+import {
+  createToken,
+  getPatientByPhone,
+  createPatient,
+} from "../services/api";
 import {
   Box,
   Typography,
@@ -7,244 +11,197 @@ import {
   Button,
   Paper,
   Alert,
-  useTheme,
-  InputAdornment,
-  Card,
-  Divider,
+  Grid,
 } from "@mui/material";
-import {
-  ConfirmationNumber,
-  Person,
-  Description,
-  CheckCircle,
-} from "@mui/icons-material";
 
 const GenerateToken = () => {
-  const theme = useTheme();
-  const [form, setForm] = useState({ name: "", reason: "" });
+  const [phone, setPhone] = useState("");
+  const [patient, setPatient] = useState(null);
+  const [form, setForm] = useState({
+    name: "",
+    age: "",
+    gender: "",
+    reason: "",
+  });
   const [token, setToken] = useState(null);
+  const [showCreatePatient, setShowCreatePatient] = useState(false);
+  const [infoMessage, setInfoMessage] = useState(""); // ← message state
+
+  const handlePhoneSearch = async () => {
+    setToken(null); // clear old token
+    setInfoMessage(""); // clear old message
+    if (!phone) {
+      setInfoMessage("Please enter a phone number");
+      return;
+    }
+
+    try {
+      const res = await getPatientByPhone(phone);
+
+      if (res.data.found) {
+        setPatient(res.data.data);
+        setForm({
+          name: res.data.data.name || "",
+          age: res.data.data.age || "",
+          gender: res.data.data.gender || "",
+          reason: "",
+        });
+        setShowCreatePatient(false);
+        setInfoMessage("⚠️ Patient already exists. You can generate token."); // ← message
+      } else {
+        setPatient(null);
+        setShowCreatePatient(true);
+        setForm({ name: "", age: "", gender: "", reason: "" });
+        setInfoMessage("✅ Patient not found. You can create a new patient."); // ← message
+      }
+    } catch (err) {
+      setInfoMessage("❌ Server error while searching patient");
+    }
+  };
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleCreatePatientAndToken = async () => {
     try {
-      const res = await createToken(form);
-      setToken(res.data.data.token_number);
-      setForm({ name: "", reason: "" });
+      const patientRes = await createPatient({
+        name: form.name,
+        phone,
+        age: form.age,
+        gender: form.gender,
+      });
+
+      const newPatient = patientRes.data.data;
+      setPatient(newPatient);
+
+      const tokenRes = await createToken({
+        patientId: newPatient._id,
+        reason: form.reason,
+      });
+
+      setToken(tokenRes.data.data.token_number);
+
+      setPhone("");
+      setForm({ name: "", age: "", gender: "", reason: "" });
+      setShowCreatePatient(false);
+      setInfoMessage("✅ New patient created and token generated!");
     } catch (err) {
-      alert("Something went wrong");
+      setInfoMessage("❌ Error creating patient or token");
+    }
+  };
+
+  const handleGenerateToken = async () => {
+    try {
+      const tokenRes = await createToken({
+        patientId: patient._id,
+        reason: form.reason,
+      });
+
+      setToken(tokenRes.data.data.token_number);
+      setForm({ ...form, reason: "" });
+      setInfoMessage("✅ Token generated for existing patient!");
+    } catch (err) {
+      setInfoMessage("❌ Error generating token");
     }
   };
 
   return (
-    <Box sx={{ p: 3 }}>
-      {/* Header */}
-      <Box sx={{ mb: 4 }}>
-        <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
-          <Box
-            sx={{
-              width: 48,
-              height: 48,
-              borderRadius: 2,
-              background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              mr: 2,
-            }}
+    <Box sx={{ maxWidth: 500, margin: "80px auto" }}>
+      <Paper elevation={3} sx={{ padding: 4, borderRadius: 3 }}>
+        <Typography variant="h5" sx={{ mb: 3, fontWeight: "bold" }}>
+          Generate Token
+        </Typography>
+
+        <TextField
+          fullWidth
+          label="Phone Number"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+          sx={{ mb: 2 }}
+        />
+        <Button variant="outlined" fullWidth onClick={handlePhoneSearch}>
+          Search Patient
+        </Button>
+
+        {infoMessage && (
+          <Alert severity={infoMessage.startsWith("❌") ? "error" : "info"} sx={{ mt: 2 }}>
+            {infoMessage}
+          </Alert>
+        )}
+
+        {(patient || showCreatePatient) && (
+          <Grid container spacing={2} sx={{ mt: 2 }}>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Name"
+                name="name"
+                value={form.name}
+                onChange={handleChange}
+                disabled={!!patient}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                fullWidth
+                label="Age"
+                name="age"
+                value={form.age}
+                onChange={handleChange}
+                disabled={!!patient}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                fullWidth
+                label="Gender"
+                name="gender"
+                value={form.gender}
+                onChange={handleChange}
+                disabled={!!patient}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Reason"
+                name="reason"
+                value={form.reason}
+                onChange={handleChange}
+              />
+            </Grid>
+          </Grid>
+        )}
+
+        {showCreatePatient && (
+          <Button
+            variant="contained"
+            fullWidth
+            sx={{ mt: 3 }}
+            onClick={handleCreatePatientAndToken}
           >
-            <ConfirmationNumber sx={{ color: "#fff", fontSize: 28 }} />
-          </Box>
-          <Typography
-            variant="h4"
-            sx={{
-              fontWeight: 700,
-              color: theme.palette.text.primary,
-            }}
+            Create Patient & Generate Token
+          </Button>
+        )}
+
+        {patient && !showCreatePatient && (
+          <Button
+            variant="contained"
+            fullWidth
+            sx={{ mt: 3 }}
+            onClick={handleGenerateToken}
           >
             Generate Token
-          </Typography>
-        </Box>
-        <Typography variant="body2" sx={{ color: theme.palette.text.secondary, ml: 8 }}>
-          Create a new token for patient queue management
-        </Typography>
-      </Box>
-
-      <Box sx={{ maxWidth: 600, mx: "auto" }}>
-        {/* Form Card */}
-        <Card
-          elevation={0}
-          sx={{
-            p: 4,
-            borderRadius: 3,
-            background:
-              theme.palette.mode === "dark"
-                ? "rgba(255, 255, 255, 0.05)"
-                : "#fff",
-            border: `1px solid ${
-              theme.palette.mode === "dark"
-                ? "rgba(255, 255, 255, 0.1)"
-                : "#e5e7eb"
-            }`,
-            mb: 3,
-          }}
-        >
-          <form onSubmit={handleSubmit}>
-            <TextField
-              fullWidth
-              label="Patient Name"
-              name="name"
-              value={form.name}
-              onChange={handleChange}
-              required
-              sx={{
-                mb: 3,
-                "& .MuiOutlinedInput-root": {
-                  borderRadius: 2,
-                  "&:hover fieldset": {
-                    borderColor: "#667eea",
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#667eea",
-                  },
-                },
-              }}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Person sx={{ color: "#667eea" }} />
-                  </InputAdornment>
-                ),
-              }}
-            />
-
-            <TextField
-              fullWidth
-              label="Reason for Visit"
-              name="reason"
-              value={form.reason}
-              onChange={handleChange}
-              required
-              multiline
-              rows={3}
-              sx={{
-                mb: 4,
-                "& .MuiOutlinedInput-root": {
-                  borderRadius: 2,
-                  "&:hover fieldset": {
-                    borderColor: "#667eea",
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#667eea",
-                  },
-                },
-              }}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Description sx={{ color: "#667eea" }} />
-                  </InputAdornment>
-                ),
-              }}
-            />
-
-            <Button
-              type="submit"
-              variant="contained"
-              size="large"
-              fullWidth
-              startIcon={<ConfirmationNumber />}
-              sx={{
-                py: 1.5,
-                borderRadius: 2,
-                fontSize: 16,
-                fontWeight: 600,
-                textTransform: "none",
-                background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-                boxShadow: "0 4px 20px rgba(102, 126, 234, 0.4)",
-                "&:hover": {
-                  background: "linear-gradient(135deg, #5568d3 0%, #6a3f8f 100%)",
-                  boxShadow: "0 6px 28px rgba(102, 126, 234, 0.5)",
-                },
-              }}
-            >
-              Generate Token
-            </Button>
-          </form>
-        </Card>
-
-        {/* Token Display */}
-        {token && (
-          <Card
-            elevation={0}
-            sx={{
-              p: 4,
-              borderRadius: 3,
-              background: "linear-gradient(135deg, #22c55e 0%, #16a34a 100%)",
-              border: "none",
-              textAlign: "center",
-              animation: "slideIn 0.5s ease-out",
-              "@keyframes slideIn": {
-                from: {
-                  opacity: 0,
-                  transform: "translateY(-20px)",
-                },
-                to: {
-                  opacity: 1,
-                  transform: "translateY(0)",
-                },
-              },
-            }}
-          >
-            <CheckCircle sx={{ fontSize: 60, color: "#fff", mb: 2 }} />
-            <Typography
-              variant="h6"
-              sx={{
-                color: "#fff",
-                fontWeight: 600,
-                mb: 2,
-                opacity: 0.9,
-              }}
-            >
-              Token Generated Successfully!
-            </Typography>
-            <Divider sx={{ bgcolor: "rgba(255,255,255,0.3)", mb: 2 }} />
-            <Typography
-              variant="body2"
-              sx={{
-                color: "#fff",
-                mb: 1,
-                opacity: 0.9,
-              }}
-            >
-              Your Token Number
-            </Typography>
-            <Typography
-              variant="h2"
-              sx={{
-                color: "#fff",
-                fontWeight: 700,
-                letterSpacing: 2,
-              }}
-            >
-              #{token}
-            </Typography>
-            <Typography
-              variant="body2"
-              sx={{
-                color: "#fff",
-                mt: 2,
-                opacity: 0.8,
-              }}
-            >
-              Please wait for your token to be called
-            </Typography>
-          </Card>
+          </Button>
         )}
-      </Box>
+
+        {token && (
+          <Alert severity="success" sx={{ mt: 3 }}>
+            Token Number: <strong>{token}</strong>
+          </Alert>
+        )}
+      </Paper>
     </Box>
   );
 };

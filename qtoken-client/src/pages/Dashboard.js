@@ -10,6 +10,8 @@ import Doctors from "../pages/Doctors";
 import Appointments from "../pages/Appointments";
 import DoctorCalendar from "../pages/DoctorCalendar"; 
 import DoctorWiseChart from "../components/DoctorWiseChart";
+import Patients from "../pages/PatientsList"; // top-la add pannunga
+
 // import MissedTokenAlert from "../components/MissedTokenAlert";
 import Reports from "../pages/Reports";
 
@@ -38,8 +40,9 @@ const Dashboard = () => {
       </div>
     </>
   }
-/>
+/>            
             <Route path="/tokens" element={<Tokens />} />
+            <Route path="/patients" element={<Patients />} />
             <Route path="/generate" element={<GenerateToken />} />
             <Route path="/doctors" element={<Doctors />} />
             <Route path="/appointments" element={<Appointments />} />

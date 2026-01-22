@@ -346,7 +346,7 @@ const Reports = () => {
                       />
                     </TableCell>
                     <TableCell sx={{ fontWeight: 600 }}>{r.name}</TableCell>
-                    <TableCell>Dr. {r.doctor?.name || "-"}</TableCell>
+                    <TableCell>Dr. {r.doctor || "-"}</TableCell>
                     <TableCell>{r.reason}</TableCell>
                     <TableCell>{getStatusChip(r.status)}</TableCell>
                     <TableCell sx={{ color: theme.palette.text.secondary }}>

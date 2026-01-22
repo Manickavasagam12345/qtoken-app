@@ -18,22 +18,57 @@ import {
   MedicalInformation,
   CalendarMonth,
   Assessment,
-  LocalHospital,
+  People,
 } from "@mui/icons-material";
 import { Link, useLocation } from "react-router-dom";
 
-const Sidebar = ({ open, drawerWidth = 260 }) => {
+const drawerWidth = 220;
+
+const Sidebar = ({ open }) => {
   const location = useLocation();
   const currentDrawerWidth = open ? drawerWidth : 70;
 
   const items = [
-    { text: "Dashboard", icon: <Dashboard />, to: "/" },
-    { text: "Token List", icon: <ListAlt />, to: "/tokens" },
-    { text: "Generate Token", icon: <AddBox />, to: "/generate" },
-    { text: "Doctors", icon: <Person />, to: "/doctors" },
-    { text: "Appointments", icon: <MedicalInformation />, to: "/appointments" },
-    { text: "Doctor Calendar", icon: <CalendarMonth />, to: "/doctor-calendar" },
-    { text: "Reports", icon: <Assessment />, to: "/reports" },
+    {
+      text: "Dashboard",
+      icon: <Dashboard sx={{ color: "#64b5f6" }} />,
+      to: "/",
+    },
+    {
+      text: "Token List",
+      icon: <ListAlt sx={{ color: "#81c784" }} />,
+      to: "/tokens",
+    },
+    {
+      text: "Generate Token",
+      icon: <AddBox sx={{ color: "#ba68c8" }} />,
+      to: "/generate",
+    },
+    {
+      text: "Patients",
+      icon: <People sx={{ color: "#ffb74d" }} />,
+      to: "/patients",
+    },
+    {
+      text: "Doctors",
+      icon: <Person sx={{ color: "white" }} />,
+      to: "/doctors",
+    },
+    // {
+    //   text: "Appointments",
+    //   icon: <MedicalInformation sx={{ color: "orange" }} />,
+    //   to: "/appointments",
+    // },
+    // {
+    //   text: "Doctor Calendar",
+    //   icon: <CalendarMonth sx={{ color: "blue" }} />,
+    //   to: "/doctor-calendar",
+    // },
+    {
+      text: "Reports",
+      icon: <Assessment sx={{ color: "teal" }} />,
+      to: "/reports",
+    },
   ];
 
   return (
