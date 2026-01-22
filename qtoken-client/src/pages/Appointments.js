@@ -18,6 +18,7 @@ import {
   Chip,
   IconButton,
   Stack,
+<<<<<<< HEAD
   Dialog,
   DialogTitle,
   DialogContent,
@@ -39,6 +40,14 @@ import {
   EventNote,
   Search,
 } from "@mui/icons-material";
+=======
+} from "@mui/material";
+
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import DoneIcon from '@mui/icons-material/Done';
+import CancelIcon from '@mui/icons-material/Cancel';
+
+>>>>>>> parent of f7a6c9d (Merge pull request #1 from Manickavasagam12345/manick-local)
 import axios from "axios";
 
 const Appointments = () => {
@@ -54,14 +63,6 @@ const Appointments = () => {
   });
   const [loadingUpdateId, setLoadingUpdateId] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-
-  // Reschedule dialog state
-  const [openDialog, setOpenDialog] = useState(false);
-  const [selectedAppt, setSelectedAppt] = useState(null);
-  const [rescheduleData, setRescheduleData] = useState({
-    date: "",
-    time: "",
-  });
 
   const fetchAppointments = async () => {
     try {
@@ -111,35 +112,12 @@ const Appointments = () => {
   const handleStatusUpdate = async (id, status) => {
     try {
       setLoadingUpdateId(id);
-      await axios.patch(
-        `http://localhost:5000/api/appointments/${id}/status`,
-        { status }
-      );
+      await axios.patch(`http://localhost:5000/api/appointments/${id}/status`, { status });
       fetchAppointments();
     } catch (err) {
       alert("Error updating status");
     } finally {
       setLoadingUpdateId(null);
-    }
-  };
-
-  // Reschedule handlers
-  const handleOpenDialog = (appt) => {
-    setSelectedAppt(appt);
-    setRescheduleData({ date: appt.date, time: appt.time });
-    setOpenDialog(true);
-  };
-
-  const handleRescheduleSave = async () => {
-    try {
-      await axios.patch(
-        `http://localhost:5000/api/appointments/${selectedAppt._id}/reschedule`,
-        rescheduleData
-      );
-      fetchAppointments();
-      setOpenDialog(false);
-    } catch (err) {
-      alert("Error rescheduling appointment");
     }
   };
 
@@ -191,6 +169,7 @@ const Appointments = () => {
   );
 
   return (
+<<<<<<< HEAD
     <Box sx={{ p: 3 }}>
       {/* Header */}
       <Box sx={{ mb: 4 }}>
@@ -206,6 +185,34 @@ const Appointments = () => {
               justifyContent: "center",
               mr: 2,
             }}
+=======
+    <Box p={3}>
+      <Typography variant="h5" gutterBottom>
+        Doctor Appointments
+      </Typography>
+
+      <Box
+        component="form"
+        onSubmit={handleSubmit}
+        sx={{ display: "flex", gap: 2, flexWrap: "wrap", mb: 3 }}
+      >
+        <TextField
+          label="Patient Name"
+          name="patient"
+          value={form.patient}
+          onChange={handleChange}
+          required
+        />
+
+        <FormControl sx={{ minWidth: 200 }}>
+          <InputLabel>Doctor</InputLabel>
+          <Select
+            name="doctor"
+            value={form.doctor}
+            onChange={handleChange}
+            required
+            label="Doctor"
+>>>>>>> parent of f7a6c9d (Merge pull request #1 from Manickavasagam12345/manick-local)
           >
             <EventNote sx={{ color: "#fff", fontSize: 28 }} />
           </Box>
@@ -462,6 +469,7 @@ const Appointments = () => {
         />
       </Box>
 
+<<<<<<< HEAD
       {/* Appointments Table */}
       <TableContainer
         component={Paper}
@@ -480,6 +488,9 @@ const Appointments = () => {
           overflow: "hidden",
         }}
       >
+=======
+      <TableContainer component={Paper}>
+>>>>>>> parent of f7a6c9d (Merge pull request #1 from Manickavasagam12345/manick-local)
         <Table>
           <TableHead>
             <TableRow
@@ -502,12 +513,59 @@ const Appointments = () => {
             </TableRow>
           </TableHead>
           <TableBody>
+<<<<<<< HEAD
             {filteredAppointments.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={7} align="center" sx={{ py: 6 }}>
                   <Typography color="textSecondary">
                     No appointments found
                   </Typography>
+=======
+            {appointments.map((appt) => (
+              <TableRow key={appt._id}>
+                <TableCell>{appt.patient}</TableCell>
+                <TableCell>{appt.doctor?.name || "-"}</TableCell>
+                <TableCell>{appt.date}</TableCell>
+                <TableCell>{appt.time}</TableCell>
+                <TableCell>{appt.reason}</TableCell>
+                <TableCell>{getStatusChip(appt.status)}</TableCell>
+                <TableCell>
+                  <Stack direction="row" spacing={1}>
+                    {appt.status !== "completed" && (
+                      <Button
+                        variant="contained"
+                        size="small"
+                        color="success"
+                        disabled={loadingUpdateId === appt._id}
+                        onClick={() => handleStatusUpdate(appt._id, "completed")}
+                      >
+                        Complete
+                      </Button>
+                    )}
+                    {appt.status !== "missed" && (
+                      <Button
+                        variant="contained"
+                        size="small"
+                        color="error"
+                        disabled={loadingUpdateId === appt._id}
+                        onClick={() => handleStatusUpdate(appt._id, "missed")}
+                      >
+                        Missed
+                      </Button>
+                    )}
+                    {appt.status !== "pending" && (
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        color="warning"
+                        disabled={loadingUpdateId === appt._id}
+                        onClick={() => handleStatusUpdate(appt._id, "pending")}
+                      >
+                        Pending
+                      </Button>
+                    )}
+                  </Stack>
+>>>>>>> parent of f7a6c9d (Merge pull request #1 from Manickavasagam12345/manick-local)
                 </TableCell>
               </TableRow>
             ) : (
@@ -617,6 +675,7 @@ const Appointments = () => {
           </TableBody>
         </Table>
       </TableContainer>
+<<<<<<< HEAD
 
       {/* Reschedule Dialog */}
       <Dialog
@@ -734,6 +793,8 @@ const Appointments = () => {
           </Button>
         </DialogActions>
       </Dialog>
+=======
+>>>>>>> parent of f7a6c9d (Merge pull request #1 from Manickavasagam12345/manick-local)
     </Box>
   );
 };

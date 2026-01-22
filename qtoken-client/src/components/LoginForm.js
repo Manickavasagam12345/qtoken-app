@@ -1,9 +1,13 @@
 import React, { useState } from "react";
+<<<<<<< HEAD
 import { Box, Paper, Typography, TextField, Button } from "@mui/material";
 import { LocalHospital } from "@mui/icons-material";
 import qtlogo from "../images/qtlogo.jpg";
+=======
+import { TextField, Button, Box, Typography } from "@mui/material";
+>>>>>>> parent of f7a6c9d (Merge pull request #1 from Manickavasagam12345/manick-local)
 
-const Login = ({ onSubmit }) => {
+const LoginForm = ({ onSubmit }) => {
   const [form, setForm] = useState({ username: "", password: "" });
 
   const handleChange = (e) => {
@@ -16,6 +20,7 @@ const Login = ({ onSubmit }) => {
   };
 
   return (
+<<<<<<< HEAD
     <Box
       sx={{
         minHeight: "100vh",
@@ -158,8 +163,21 @@ const Login = ({ onSubmit }) => {
           © 2025 QToken. Secure Healthcare Management
         </Typography>
       </Paper>
+=======
+    <Box sx={{ width: 350, p: 4, bgcolor: "#fff", borderRadius: 2, boxShadow: 3 }}>
+      <Typography variant="h5" mb={2} textAlign="center">
+        QToken Admin Login
+      </Typography>
+      <form onSubmit={handleSubmit}>
+        <TextField name="username" label="Username" fullWidth margin="normal" value={form.username} onChange={handleChange} required />
+        <TextField name="password" label="Password" type="password" fullWidth margin="normal" value={form.password} onChange={handleChange} required />
+        <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }}>
+          Login
+        </Button>
+      </form>
+>>>>>>> parent of f7a6c9d (Merge pull request #1 from Manickavasagam12345/manick-local)
     </Box>
   );
 };
 
-export default Login;
+export default LoginForm;

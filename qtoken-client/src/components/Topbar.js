@@ -23,6 +23,7 @@ const Topbar = ({ toggleSidebar }) => {
   const { toggleMode, mode } = useThemeMode();
 
   return (
+<<<<<<< HEAD
     <AppBar
       position="fixed"
       sx={{
@@ -109,6 +110,22 @@ const Topbar = ({ toggleSidebar }) => {
         >
           Logout
         </Button>
+=======
+    <AppBar position="static" sx={{ bgcolor: "#343456" }}>
+      <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <IconButton onClick={toggleSidebar} color="inherit" edge="start" sx={{ mr: 2 }}>
+            <MenuIcon />
+          </IconButton>
+          <Typography variant="h6">QToken Admin</Typography>
+        </Box>
+        <Box>
+          <Button onClick={toggleMode} sx={{ color: "#fff", mr: 2 }}>
+            {mode === "dark" ? "☀️ Light" : "🌙 Dark"}
+          </Button>
+          <Button color="inherit" onClick={logout}>Logout</Button>
+        </Box>
+>>>>>>> parent of f7a6c9d (Merge pull request #1 from Manickavasagam12345/manick-local)
       </Toolbar>
     </AppBar>
   );

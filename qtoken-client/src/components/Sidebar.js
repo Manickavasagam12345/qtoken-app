@@ -10,6 +10,7 @@ import {
   Typography,
   Toolbar,
 } from "@mui/material";
+<<<<<<< HEAD
 import {
   Dashboard,
   ListAlt,
@@ -20,13 +21,24 @@ import {
   Assessment,
   LocalHospital,
 } from "@mui/icons-material";
+=======
+import { Dashboard, ListAlt, AddBox,Person ,MedicalInformation,CalendarMonth ,Assessment} from "@mui/icons-material";
+>>>>>>> parent of f7a6c9d (Merge pull request #1 from Manickavasagam12345/manick-local)
 import { Link, useLocation } from "react-router-dom";
 
+<<<<<<< HEAD
 const Sidebar = ({ open, drawerWidth = 260 }) => {
+=======
+
+const drawerWidth = 220;
+
+const Sidebar = ({ open }) => {
+>>>>>>> parent of f7a6c9d (Merge pull request #1 from Manickavasagam12345/manick-local)
   const location = useLocation();
   const currentDrawerWidth = open ? drawerWidth : 70;
 
   const items = [
+<<<<<<< HEAD
     { text: "Dashboard", icon: <Dashboard />, to: "/" },
     { text: "Token List", icon: <ListAlt />, to: "/tokens" },
     { text: "Generate Token", icon: <AddBox />, to: "/generate" },
@@ -34,6 +46,29 @@ const Sidebar = ({ open, drawerWidth = 260 }) => {
     { text: "Appointments", icon: <MedicalInformation />, to: "/appointments" },
     { text: "Doctor Calendar", icon: <CalendarMonth />, to: "/doctor-calendar" },
     { text: "Reports", icon: <Assessment />, to: "/reports" },
+=======
+    {
+      text: "Dashboard",
+      icon: <Dashboard sx={{ color: "#64b5f6" }} />, // light blue
+      to: "/",
+    },
+    {
+      text: "Token List",
+      icon: <ListAlt sx={{ color: "#81c784" }} />, // green
+      to: "/tokens",
+    },
+    {
+      text: "Generate Token",
+      icon: <AddBox sx={{ color: "#ba68c8" }} />, // purple
+      to: "/generate",
+    },
+    { text: "Doctors", icon: <Person sx={{ color: "white" }}/>, to: "/doctors" },
+    { text: "Appointments", icon: <MedicalInformation sx={{ color: "orange" }} />, to: "/appointments" },
+  { text: "Doctor Calendar", icon: <CalendarMonth sx={{ color: "blue" }} />, to: "/doctor-calendar" },
+  { text: "Reports", icon: <Assessment sx={{ color: "teal" }} />, to: "/reports" }
+
+
+>>>>>>> parent of f7a6c9d (Merge pull request #1 from Manickavasagam12345/manick-local)
   ];
 
   return (
@@ -45,6 +80,7 @@ const Sidebar = ({ open, drawerWidth = 260 }) => {
         "& .MuiDrawer-paper": {
           width: currentDrawerWidth,
           boxSizing: "border-box",
+<<<<<<< HEAD
           transition: "width 225ms cubic-bezier(0, 0, 0.2, 1) 0ms",
           overflowX: "hidden",
           background: (theme) =>
@@ -151,6 +187,89 @@ const Sidebar = ({ open, drawerWidth = 260 }) => {
           );
         })}
       </List>
+=======
+          backgroundColor: "#343456", // dark violet
+          color: "#fff",
+          borderRight: "none",
+          boxShadow: "2px 0 6px rgba(0, 0, 0, 0.2)",
+        },
+      }}
+    >
+      <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
+        {/* Top Logo */}
+        <Box
+          sx={{
+            height: 64,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: open ? "center" : "center",
+            px: 2,
+            py: 1,
+            backgroundColor: "#2e2e50",
+          }}
+        >
+          <img
+            src={qtlogo}
+            alt="QToken Logo"
+            style={{
+              height: 32,
+              width: open ? 32 : 30,
+              marginRight: open ? 10 : 0,
+              transition: "0.3s ease",
+            }}
+          />
+         
+        </Box>
+
+        <List>
+          {items.map((item) => {
+            const isActive = location.pathname === item.to;
+            return (
+              <Tooltip
+                title={!open ? item.text : ""}
+                placement="right"
+                key={item.text}
+              >
+                <ListItem
+                  button
+                  component={Link}
+                  to={item.to}
+                  selected={isActive}
+                  sx={{
+                    borderRadius: "8px",
+                    mx: open ? 1 : 0.5,
+                    my: 0.5,
+                    px: open ? 2 : 1,
+                    "&.Mui-selected": {
+                      backgroundColor: "#505079",
+                    },
+                    "&:hover": {
+                      backgroundColor: "#41416b",
+                    },
+                  }}
+                >
+                  <ListItemIcon sx={{ minWidth: 40 }}>
+                    {item.icon}
+                  </ListItemIcon>
+                  {open && (
+                    <ListItemText
+                      primary={item.text}
+                      primaryTypographyProps={{
+                        fontSize: 14,
+                        fontWeight: 500,
+                        color: "#fff",
+                      }}
+                    />
+                  )}
+                </ListItem>
+              </Tooltip>
+            );
+          })}
+        </List>
+
+        <Divider sx={{ backgroundColor: "#555", mt: "auto" }} />
+      </Box>
+>>>>>>> parent of f7a6c9d (Merge pull request #1 from Manickavasagam12345/manick-local)
     </Drawer>
   );
 };
